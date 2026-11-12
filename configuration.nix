@@ -3,41 +3,38 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [
+    ./hardware-configuration.nix
+    ./modules/hardware-support.nix
+    ./modules/printer-scanner.nix
+    ./modules/system-setup.nix
+    ./modules/sound.nix
+    ./modules/state-version.nix
+    ./modules/system-packages.nix
+    ./modules/gnome.nix
+    ./modules/boot.nix
+    ./modules/networking.nix
+    ./modules/bluetooth.nix
+    ./modules/user-accounts.nix
+    ./modules/flatpak.nix
+    ./modules/auto-update.nix
+    ./modules/experimental-features.nix
+    ./modules/laptop.nix
+    ./modules/apparmor.nix
+    # apparmor-gui.nix stays out while the flake package is being tested.
+    ./modules/adguard.nix
+    ./modules/dns-lock.nix
+    ./modules/system-filter.nix
+  ];
 
-##############  
-#Module Setup#
-##############
+  # Replace this after you clone the repo onto a machine.
+  networking.hostName = "hostname";
 
-imports =
-    [
-
-	./hardware-support.nix
-	./printer-scanner.nix
-	./system-setup.nix
-	./sound.nix
-	./state-version.nix
-	./system-packages.nix
-	./gnome.nix
-	./boot.nix
-	./networking.nix
-	./user-accounts.nix
-	./flatpak.nix
-	./auto-update.nix
-	./experimental-features.nix
-	./laptop.nix
-	./apparmor.nix
-	./apparmor-gui.nix
-	./auto-login.nix
-	./adguard.nix
-
-    ];
-
-  # Hostname and hardware stay in hosts/<name>.nix.
+  # hardware-configuration.nix stays on the machine.
 
   # GNOME stays the default login session.
   services.displayManager.defaultSession = lib.mkForce "gnome";
 
   # GNOME gets the SSH password prompt.
   programs.ssh.askPassword = lib.mkForce "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
-
 }

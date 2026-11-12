@@ -1,24 +1,13 @@
 {
-  description = "NixOS GNOME configurations by hostname";
+  description = "NixOS GNOME configuration for this machine";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.8.0";
-  };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/ac588ef1c914";
 
-  outputs = { self, nixpkgs, nix-flatpak, ... }:
-    let
+  outputs = { self, nixpkgs, ... }@inputs: {
+    nixosConfigurations.hostname = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      hosts = [ "Asus" "minilap" ];
-    in {
-      nixosConfigurations = nixpkgs.lib.genAttrs hosts (hostName:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [
-            nix-flatpak.nixosModules.nix-flatpak
-            ./configuration.nix
-            ./hosts/${hostName}.nix
-          ];
-        });
+      specialArgs = { inherit inputs; };
+      modules = [ ./configuration.nix ];
     };
+  };
 }

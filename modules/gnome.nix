@@ -1,9 +1,11 @@
 #gnome.nix
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
   services.xserver.enable = true;
+  # xserver installs XTerm and its launcher unless it is excluded.
+  services.xserver.excludePackages = [ pkgs.xterm ];
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
@@ -14,7 +16,6 @@
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
     gnome-user-docs
-    gnome-shell-extensions
   ];
 
   # GNOME hides Log Out with one account and one session. Show it anyway.
